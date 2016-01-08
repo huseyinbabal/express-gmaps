@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>ExpressJS Google Maps Example</title>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.6/css/bootstrap.min.css">
+    <style>
+        body {
+            padding-top: 70px;
+        }
+    </style>
+</head>
+<body>
+<nav class="navbar navbar-inverse navbar-fixed-top">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar"
+                    aria-expanded="false" aria-controls="navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="#">ExpressJS Google Maps</a>
+        </div>
+    </div>
+</nav>
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-lg-10">
+            <input type="text" id="address" class="form-control" placeholder="Address (e.g. Ankara)"/>
+        </div>
+        <div class="col-lg-2">
+            <button type="button" id="search" class="btn btn-success"><span class="glyphicon glyphicon-search"></span> Search</button>
+        </div>
+    </div>
+    <br/>
+    <div class="row">
+        <div class="col-lg-12">
+            <div id="map" style="width: 1250px; height: 500px;"></div>
+        </div>
+    </div>
+</div>
+<a href="https://github.com/huseyinbabal/express-gmaps"><img style="position: absolute; top: 0; right: 0; border: 0; z-index: 1000000;" src="https://camo.githubusercontent.com/e7bbb0521b397edbd5fe43e7f760759336b5e05f/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f72696768745f677265656e5f3030373230302e706e67" alt="Fork me on GitHub" data-canonical-src="https://s3.amazonaws.com/github/ribbons/forkme_right_green_007200.png"></a>
+</body>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+<script  src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.6/js/bootstrap.min.js"></script>
+<script  src="https://cdnjs.cloudflare.com/ajax/libs/jquery.blockUI/2.70.0-2014.11.23/jquery.blockUI.min.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery.googlemap/1.5/jquery.googlemap.min.js"></script>
+<script type="text/javascript" src="//www.google.com.tr/jsapi"></script>
+<script type="text/javascript">
+    google.load("maps", "3.4", {
+        other_params: "sensor=false&language=tr"
+    });
+</script>
+<script type="text/javascript">
+    $(function() {
+        $("#map").googleMap();
+        $("#search").on("click", function() {
+            searchAddress($("#address").val());
+        });
+
+        $("#address").on('keyup', function(event) {
+            if(event.keyCode == 13) {
+                searchAddress($("#address").val());
+            }
+        });
+    });
+
+    function searchAddress(address) {
+        $.blockUI({message: "<strong><h4>Searching...</h4></strong>"});
+        $("#address").val("");
+        $.ajax({
+            url:"search?address=" + address,
+            success: function( response ) {
+                if (response.success) {
+                    if (response.data.status == "ZERO_RESULTS") {
+                        alert("No result found!");
+                    } else {
+                        $.each(response.data.results, function (i, val) {
+                            $("#map").addMarker({
+                                coords: [val.geometry.location.lat, val.geometry.location.lng]
+                            });
+                        });
+                    }
+                } else {
+                    alert("Technical error occured");
+                }
+                $.unblockUI();
+            }
+        });
+    }
+</script>
+</html>
