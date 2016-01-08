@@ -1,0 +1,19 @@
+{
+  "name": "express-gmap",
+  "version": "1.0.0",
+  "description": "ExpressJS Google Maps Example",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "googlemaps",
+    "express"
+  ],
+  "author": "Huseyin BABAL <huseyinbabal88@gmail.com>",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.13.3",
+    "googlemaps": "^1.0.2"
+  }
+}
